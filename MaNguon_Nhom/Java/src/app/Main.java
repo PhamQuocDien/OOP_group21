@@ -3,7 +3,7 @@ import data.DataSeeder;
 import dao.InMemoryDAO;
 import model.entity.NhomTho;
 import java.time.LocalDate;
-import queries.TruyVanCaNhan;
+import jv.TruyVanCaNhan;
 public class Main {
     public static void main(String[] args) {
         InMemoryDAO<NhomTho> dao = new InMemoryDAO<>(NhomTho::getMaNhomTho);

@@ -1,6 +1,4 @@
-
-package queries;
-
+package jv;
 import data.DataSeeder;
 import model.entity.ChiTietHopDong;
 import model.entity.CongViec;
