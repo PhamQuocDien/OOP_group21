@@ -47,6 +47,161 @@ public class Main {
         System.out.println("Kha nang tho: " + duLieuMau.getKhaNangThos().size());
 
         System.out.println(
+                "\n========== KIEM THU 10 CAU TRUY VAN CUA LE NGUYEN MINH THU ==========");
+
+        var khachHangThu = duLieuMau.getKhachHangs().get(0);
+        var thietBiThu = duLieuMau.getThietBis().get(0);
+        var hopDongThu = duLieuMau.getHopDongs().get(0);
+        LocalDate ngayLapDauTienThu = duLieuMau.getHopDongs().stream()
+                .map(hd -> hd.getNgaylap())
+                .min(LocalDate::compareTo)
+                .orElseThrow();
+        LocalDate ngayLapCuoiCungThu = duLieuMau.getHopDongs().stream()
+                .map(hd -> hd.getNgaylap())
+                .max(LocalDate::compareTo)
+                .orElseThrow();
+
+        // Cau 1
+        System.out.println("\n[CAU 1] Lay danh sach tat ca khach hang.");
+        var q1Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .layTatCaKhachHang(duLieuMau);
+        System.out.println("So ket qua: " + q1Thu.size());
+        for (var item : q1Thu) {
+            System.out.printf(
+                    "Ma khach hang: %s | Ho ten: %s | SDT: %s | Dia chi: %s%n",
+                    item.getMaKH(), item.getHoten(), item.getSdt(), item.getDiachi());
+        }
+
+        // Cau 2
+        System.out.printf(
+                "\n[CAU 2] Tim khach hang theo so dien thoai %s.%n",
+                khachHangThu.getSdt());
+        var q2Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .timKhachHangTheoSoDienThoai(duLieuMau, khachHangThu.getSdt());
+        System.out.println("So ket qua: " + q2Thu.size());
+        for (var item : q2Thu) {
+            System.out.printf(
+                    "Ma khach hang: %s | Ho ten: %s | SDT: %s%n",
+                    item.getMaKH(), item.getHoten(), item.getSdt());
+        }
+
+        // Cau 3
+        System.out.println(
+                "\n[CAU 3] Tim khach hang co hop dong chua phat sinh phieu thu.");
+        var q3Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .layKhachHangCoHopDongChuaThanhToan(duLieuMau);
+        System.out.println("So ket qua: " + q3Thu.size());
+        for (var item : q3Thu) {
+            System.out.printf(
+                    "Ma khach hang: %s | Ho ten: %s | SDT: %s%n",
+                    item.getMaKH(), item.getHoten(), item.getSdt());
+        }
+
+        // Cau 4
+        System.out.println("\n[CAU 4] Dem so hop dong cua tung khach hang.");
+        var q4Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .demHopDongTheoKhachHang(duLieuMau);
+        System.out.println("So ket qua: " + q4Thu.size());
+        for (var item : q4Thu) {
+            System.out.printf(
+                    "Ma khach hang: %s | Ho ten: %s | So hop dong: %d%n",
+                    item.khachHang().getMaKH(),
+                    item.khachHang().getHoten(),
+                    item.soHopDong());
+        }
+
+        // Cau 5
+        System.out.printf(
+                "\n[CAU 5] Lay danh sach thiet bi cua khach hang %s.%n",
+                khachHangThu.getMaKH());
+        var q5Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .layThietBiTheoKhachHang(duLieuMau, khachHangThu.getMaKH());
+        System.out.println("So ket qua: " + q5Thu.size());
+        for (var item : q5Thu) {
+            System.out.printf(
+                    "Ma thiet bi: %s | Loai: %s | Hang san xuat: %s | Model: %s | Tinh trang: %s%n",
+                    item.getMaThietBi(), item.getLoaiTB(), item.getHangSX(),
+                    item.getModel(), item.getTinhtrang());
+        }
+
+        // Cau 6
+        System.out.printf(
+                "\n[CAU 6] Loc thiet bi theo hang san xuat %s.%n",
+                thietBiThu.getHangSX());
+        var q6Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .layThietBiTheoHangSanXuat(duLieuMau, thietBiThu.getHangSX());
+        System.out.println("So ket qua: " + q6Thu.size());
+        for (var item : q6Thu) {
+            System.out.printf(
+                    "Ma thiet bi: %s | Loai: %s | Hang san xuat: %s | Model: %s | Ma khach hang: %s%n",
+                    item.getMaThietBi(), item.getLoaiTB(), item.getHangSX(),
+                    item.getModel(), item.getMaKH());
+        }
+
+        // Cau 7
+        System.out.println("\n[CAU 7] Thong ke so thiet bi theo tung loai.");
+        var q7Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .demThietBiTheoLoai(duLieuMau);
+        System.out.println("So loai thiet bi: " + q7Thu.size());
+        for (var item : q7Thu) {
+            System.out.printf(
+                    "Loai thiet bi: %s | So luong: %d%n",
+                    item.loaiThietBi(), item.soLuong());
+        }
+
+        // Cau 8
+        System.out.printf(
+                "\n[CAU 8] Tim hop dong theo so hop dong %s.%n",
+                hopDongThu.getSoHD());
+        var q8Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .timHopDongTheoSoHD(duLieuMau, hopDongThu.getSoHD());
+        System.out.println("So ket qua: " + (q8Thu == null ? 0 : 1));
+        if (q8Thu != null) {
+            System.out.printf(
+                    "So hop dong: %s | Ngay lap: %s | Trang thai: %s | Tong tien: %,.0f dong | Ma khach hang: %s%n",
+                    q8Thu.getSoHD(),
+                    q8Thu.getNgaylap().format(DINH_DANG_NGAY),
+                    q8Thu.getTinhtrangHD(),
+                    q8Thu.getTongtien(),
+                    q8Thu.getMaKH());
+        }
+
+        // Cau 9
+        System.out.println(
+                "\n[CAU 9] Lay hop dong moi tiep nhan hoac dang sua chua.");
+        var q9Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .layHopDongDangXuLy(duLieuMau);
+        System.out.println("So ket qua: " + q9Thu.size());
+        for (var item : q9Thu) {
+            System.out.printf(
+                    "So hop dong: %s | Ngay lap: %s | Trang thai: %s | Tong tien: %,.0f dong | Ma khach hang: %s%n",
+                    item.getSoHD(),
+                    item.getNgaylap().format(DINH_DANG_NGAY),
+                    item.getTinhtrangHD(),
+                    item.getTongtien(),
+                    item.getMaKH());
+        }
+
+        // Cau 10
+        System.out.printf(
+                "\n[CAU 10] Lay hop dong tu %s den %s.%n",
+                ngayLapDauTienThu.format(DINH_DANG_NGAY),
+                ngayLapCuoiCungThu.format(DINH_DANG_NGAY));
+        var q10Thu = SanPham_CaNhan.LeNguyenMinhThu.TruyVan.java.TruyVanCaNhan
+                .layHopDongTheoKhoangNgay(
+                        duLieuMau, ngayLapDauTienThu, ngayLapCuoiCungThu);
+        System.out.println("So ket qua: " + q10Thu.size());
+        for (var item : q10Thu) {
+            System.out.printf(
+                    "So hop dong: %s | Ngay lap: %s | Ngay hen tra: %s | Trang thai: %s | Ma khach hang: %s%n",
+                    item.getSoHD(),
+                    item.getNgaylap().format(DINH_DANG_NGAY),
+                    item.getNgayHenTra().format(DINH_DANG_NGAY),
+                    item.getTinhtrangHD(),
+                    item.getMaKH());
+        }
+
+        System.out.println(
                 "\n========== KIEM THU 10 CAU TRUY VAN CA NHAN (JAVA STREAM) ==========");
 
         // Cau 21

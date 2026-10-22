@@ -8,5 +8,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\SanPham_CaNhan\PhamQuocDien\TruyVan\C#\TruyVanCaNhan.cs" Link="TruyVanCaNhan.cs" />
+    <Compile Include="..\..\SanPham_CaNhan\LeNguyenMinhThu\TruyVan\C#\TruyVanCaNhan.cs" Link="TruyVanCaNhanThu.cs" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 using CSharp.Data;
 using CSharp.DAO;
 using CSharp.Entities;
+using LeNguyenMinhThu.TruyVan;
 using PhamQuocDien.TruyVan;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -39,8 +40,162 @@ Console.WriteLine("Phieu thu: " + duLieu.PhieuThus.Count);
 Console.WriteLine("Kha nang tho: " + duLieu.KhaNangThos.Count);
 
 // ============================================================
-// 3. KIỂM THỬ 10 CÂU TRUY VẤN CÁ NHÂN
+// 3. KIỂM THỬ 10 CÂU TRUY VẤN ĐẦU TIÊN 1-10
 // ============================================================
+Console.WriteLine("\n========== KIỂM THỬ 10 CÂU TRUY VẤN ĐẦU TIÊN 1-10 ==========");
+
+var truyVanKhachHang = duLieu.KhachHangs.First();
+var truyVanThietBi = duLieu.ThietBis.First(tb => !string.IsNullOrWhiteSpace(tb.HangSX));
+var truyVanHopDong = duLieu.HopDongs.First();
+var ngayLapDauTien = duLieu.HopDongs.Min(hd => hd.Ngaylap);
+var ngayLapCuoiCung = duLieu.HopDongs.Max(hd => hd.Ngaylap);
+
+// Câu 1
+Console.WriteLine("\n[CÂU 1] Lấy danh sách tất cả khách hàng.");
+var q1Thu = TruyVan10CauDau.LayTatCaKhachHang(duLieu);
+Console.WriteLine($"Số kết quả: {q1Thu.Count}");
+foreach (var item in q1Thu)
+{
+    Console.WriteLine(
+        $"Mã khách hàng: {item.MaKH} | " +
+        $"Họ tên: {item.Hoten} | " +
+        $"SĐT: {item.Sdt} | " +
+        $"Địa chỉ: {item.Diachi}");
+}
+
+// Câu 2
+Console.WriteLine(
+    $"\n[CÂU 2] Tìm khách hàng theo số điện thoại {truyVanKhachHang.Sdt}.");
+var q2Thu = TruyVan10CauDau.TimKhachHangTheoSoDienThoai(
+    duLieu, truyVanKhachHang.Sdt);
+Console.WriteLine($"Số kết quả: {q2Thu.Count}");
+foreach (var item in q2Thu)
+{
+    Console.WriteLine(
+        $"Mã khách hàng: {item.MaKH} | " +
+        $"Họ tên: {item.Hoten} | " +
+        $"SĐT: {item.Sdt}");
+}
+
+// Câu 3
+Console.WriteLine(
+    "\n[CÂU 3] Tìm khách hàng có hợp đồng chưa phát sinh phiếu thu.");
+var q3Thu = TruyVan10CauDau.LayKhachHangCoHopDongChuaThanhToan(duLieu);
+Console.WriteLine($"Số kết quả: {q3Thu.Count}");
+foreach (var item in q3Thu)
+{
+    Console.WriteLine(
+        $"Mã khách hàng: {item.MaKH} | " +
+        $"Họ tên: {item.Hoten} | " +
+        $"SĐT: {item.Sdt}");
+}
+
+// Câu 4
+Console.WriteLine(
+    "\n[CÂU 4] Đếm số hợp đồng của từng khách hàng.");
+var q4Thu = TruyVan10CauDau.DemHopDongTheoKhachHang(duLieu);
+Console.WriteLine($"Số kết quả: {q4Thu.Count}");
+foreach (var item in q4Thu)
+{
+    Console.WriteLine(
+        $"Mã khách hàng: {item.KhachHang.MaKH} | " +
+        $"Họ tên: {item.KhachHang.Hoten} | " +
+        $"Số hợp đồng: {item.SoHopDong}");
+}
+
+// Câu 5
+Console.WriteLine(
+    $"\n[CÂU 5] Lấy danh sách thiết bị của khách hàng {truyVanKhachHang.MaKH}.");
+var q5Thu = TruyVan10CauDau.LayThietBiTheoKhachHang(
+    duLieu, truyVanKhachHang.MaKH);
+Console.WriteLine($"Số kết quả: {q5Thu.Count}");
+foreach (var item in q5Thu)
+{
+    Console.WriteLine(
+        $"Mã thiết bị: {item.MaThietBi} | " +
+        $"Loại: {item.LoaiTB} | " +
+        $"Hãng sản xuất: {item.HangSX} | " +
+        $"Model: {item.Model} | " +
+        $"Tình trạng: {item.Tinhtrang}");
+}
+
+// Câu 6
+Console.WriteLine(
+    $"\n[CÂU 6] Lọc thiết bị theo hãng sản xuất {truyVanThietBi.HangSX}.");
+var q6Thu = TruyVan10CauDau.LayThietBiTheoHangSanXuat(
+    duLieu, truyVanThietBi.HangSX);
+Console.WriteLine($"Số kết quả: {q6Thu.Count}");
+foreach (var item in q6Thu)
+{
+    Console.WriteLine(
+        $"Mã thiết bị: {item.MaThietBi} | " +
+        $"Loại: {item.LoaiTB} | " +
+        $"Hãng sản xuất: {item.HangSX} | " +
+        $"Model: {item.Model} | " +
+        $"Mã khách hàng: {item.MaKH}");
+}
+
+// Câu 7
+Console.WriteLine("\n[CÂU 7] Thống kê số thiết bị theo từng loại.");
+var q7Thu = TruyVan10CauDau.DemThietBiTheoLoai(duLieu);
+Console.WriteLine($"Số loại thiết bị: {q7Thu.Count}");
+foreach (var item in q7Thu)
+{
+    Console.WriteLine(
+        $"Loại thiết bị: {item.LoaiThietBi} | " +
+        $"Số lượng: {item.SoLuong}");
+}
+
+// Câu 8
+Console.WriteLine(
+    $"\n[CÂU 8] Tìm hợp đồng theo số hợp đồng {truyVanHopDong.SoHD}.");
+var q8Thu = TruyVan10CauDau.TimHopDongTheoSoHD(
+    duLieu, truyVanHopDong.SoHD);
+Console.WriteLine($"Số kết quả: {(q8Thu is null ? 0 : 1)}");
+if (q8Thu is not null)
+{
+    Console.WriteLine(
+        $"Số hợp đồng: {q8Thu.SoHD} | " +
+        $"Ngày lập: {q8Thu.Ngaylap:dd/MM/yyyy} | " +
+        $"Trạng thái: {q8Thu.TinhtrangHD} | " +
+        $"Tổng tiền: {q8Thu.Tongtien:N0} đồng | " +
+        $"Mã khách hàng: {q8Thu.MaKH}");
+}
+
+// Câu 9
+Console.WriteLine(
+    "\n[CÂU 9] Lấy hợp đồng mới tiếp nhận hoặc đang sửa chữa.");
+var q9Thu = TruyVan10CauDau.LayHopDongDangXuLy(duLieu);
+Console.WriteLine($"Số kết quả: {q9Thu.Count}");
+foreach (var item in q9Thu)
+{
+    Console.WriteLine(
+        $"Số hợp đồng: {item.SoHD} | " +
+        $"Ngày lập: {item.Ngaylap:dd/MM/yyyy} | " +
+        $"Trạng thái: {item.TinhtrangHD} | " +
+        $"Tổng tiền: {item.Tongtien:N0} đồng | " +
+        $"Mã khách hàng: {item.MaKH}");
+}
+
+// Câu 10
+Console.WriteLine(
+    $"\n[CÂU 10] Lấy hợp đồng từ {ngayLapDauTien:dd/MM/yyyy} " +
+    $"đến {ngayLapCuoiCung:dd/MM/yyyy}.");
+var q10Thu = TruyVan10CauDau.LayHopDongTheoKhoangNgay(
+    duLieu, ngayLapDauTien, ngayLapCuoiCung);
+Console.WriteLine($"Số kết quả: {q10Thu.Count}");
+foreach (var item in q10Thu)
+{
+    Console.WriteLine(
+        $"Số hợp đồng: {item.SoHD} | " +
+        $"Ngày lập: {item.Ngaylap:dd/MM/yyyy} | " +
+        $"Ngày hẹn trả: {item.NgayHenTra:dd/MM/yyyy} | " +
+        $"Trạng thái: {item.TinhtrangHD} | " +
+        $"Mã khách hàng: {item.MaKH}");
+}
+
+Console.WriteLine("\n========== KẾT THÚC KIỂM THỬ ==========");
+
 Console.WriteLine("\n========== KIỂM THỬ 10 CÂU TRUY VẤN CÁ NHÂN ==========");
 
 // Câu 21
@@ -225,5 +380,3 @@ foreach (var item in q30)
         $"Phương thức: {item.PhuongThuc} | " +
         $"Tổng tiền: {item.TongTien:N0} đồng");
 }
-
-Console.WriteLine("\n========== KẾT THÚC KIỂM THỬ ==========");
