@@ -12,7 +12,7 @@ namespace LeNhatNinh.TruyVan
     /// Cài đặt 10 câu truy vấn từ câu 11 đến câu 20 trong README bằng LINQ.
     /// Dữ liệu lấy từ DuLieuMau.
     /// </summary>
-    public static class TruyVan10CauGiua
+    public static class TruyVanCaNhan
     {
         // Câu 11: Tìm top 5 hợp đồng sửa chữa có tổng tiền cao nhất.
         public static List<HopDong> LayTop5HopDongTongTienCaoNhat(DuLieuMau data)
@@ -159,4 +159,3 @@ namespace LeNhatNinh.TruyVan
         }
     }
 }
-
