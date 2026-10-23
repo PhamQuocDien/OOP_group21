@@ -19,3 +19,4 @@ src\model\enums\TrangThaiCongViec.java
 src\model\enums\TrangThaiHopDong.java
 "../../SanPham_CaNhan/PhamQuocDien/TruyVan/jv/TruyVanCaNhan.java"
 "../../SanPham_CaNhan/LeNguyenMinhThu/TruyVan/java/TruyVanCaNhan.java"
+"../../SanPham_CaNhan/LeNhatNinh/TruyVan/java/TruyVanCaNhan.java"
