@@ -1,1 +1,0 @@
-Link video báo cáo: https://drive.google.com/file/d/1KIPf5FyLj_IAv3DIdH6aTHZbrk67qAGe/view?usp=sharing
