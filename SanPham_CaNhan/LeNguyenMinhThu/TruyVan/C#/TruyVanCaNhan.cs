@@ -6,11 +6,11 @@ namespace LeNguyenMinhThu.TruyVan
 {
     
     /// <summary>
-    /// Cài đặt 10 câu truy vấn đầu tiên trong README bằng LINQ.
+    /// Cài đặt 10 câu truy vấn đầu tiên 1-10 bằng LINQ.
     /// </summary>
     public static class TruyVan10CauDau
     {
-        // Câu 1: Lấy danh sách tất cả khách hàng.
+        // Câu 1: Lấy danh sách tất cả khách hàng đang lưu trữ trong hệ thống.
         public static List<KhachHang> LayTatCaKhachHang(DuLieuMau data)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -20,7 +20,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .ToList();
         }
 
-        // Câu 2: Tìm khách hàng theo số điện thoại.
+        // Câu 2: Tìm kiếm thông tin chi tiết của một khách hàng dựa trên số điện thoại.
         public static List<KhachHang> TimKhachHangTheoSoDienThoai(DuLieuMau data, string soDienThoai)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -33,7 +33,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .ToList();
         }
 
-        // Câu 3: Tìm khách hàng có ít nhất một hợp đồng chưa phát sinh phiếu thu.
+        // Câu 3: Tìm danh sách những khách hàng đã lập hợp đồng nhưng chưa thực hiện thanh toán.
         public static List<KhachHang> LayKhachHangCoHopDongChuaThanhToan(DuLieuMau data)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -46,7 +46,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .ToList();
         }
 
-        // Câu 4: Đếm số hợp đồng của từng khách hàng, kể cả khách hàng chưa có hợp đồng.
+        // Câu 4: Thống kê tổng số lượng hợp đồng sửa chữa mà từng khách hàng đã thực hiện tại trung tâm.
         public static List<(KhachHang KhachHang, int SoHopDong)> DemHopDongTheoKhachHang(DuLieuMau data)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -59,7 +59,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .ToList();
         }
 
-        // Câu 5: Lấy danh sách thiết bị thuộc về một khách hàng.
+        // Câu 5: Lấy danh sách thiết bị thuộc sở hữu của một khách hàng cụ thể dựa vào maKH.
         public static List<ThietBi> LayThietBiTheoKhachHang(DuLieuMau data, string maKH)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -72,7 +72,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .ToList();
         }
 
-        // Câu 6: Lọc thiết bị theo hãng sản xuất.
+        // Câu 6: Lọc danh sách thiết bị theo hãng sản xuất cụ thể.
         public static List<ThietBi> LayThietBiTheoHangSanXuat(DuLieuMau data, string hangSX)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -85,7 +85,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .ToList();
         }
 
-        // Câu 7: Thống kê số thiết bị theo từng loại.
+        // Câu 7: Thống kê tổng số lượng thiết bị mang đến sửa chữa phân loại theo từng loại thiết bị.
         public static List<(string LoaiThietBi, int SoLuong)> DemThietBiTheoLoai(DuLieuMau data)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -97,7 +97,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .ToList();
         }
 
-        // Câu 8: Tìm hợp đồng theo số hợp đồng.
+        // Câu 8: Tìm thông tin chi tiết của một hợp đồng theo số hợp đồng.
         public static HopDong? TimHopDongTheoSoHD(DuLieuMau data, string soHD)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -108,7 +108,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .SingleOrDefault(hd => hd.SoHD == soHD);
         }
 
-        // Câu 9: Lấy hợp đồng mới tiếp nhận hoặc đang sửa chữa.
+        // Câu 9: Lọc danh sách các hợp đồng có trạng thái MOI_TIEP_NHAN hoặc DANG_SUA_CHUA
         public static List<HopDong> LayHopDongDangXuLy(DuLieuMau data)
         {
             ArgumentNullException.ThrowIfNull(data);
@@ -120,7 +120,7 @@ namespace LeNguyenMinhThu.TruyVan
                 .ToList();
         }
 
-        // Câu 10: Lấy hợp đồng được lập trong khoảng ngày, tính cả hai ngày đầu mút.
+        // Câu 10: Liệt kê các hợp đồng sửa chữa được lập trong một khoảng thời gian cụ thể (từ ngày A đến ngày B).
         public static List<HopDong> LayHopDongTheoKhoangNgay(
             DuLieuMau data, DateOnly tuNgay, DateOnly denNgay)
         {

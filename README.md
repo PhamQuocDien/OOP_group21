@@ -448,3 +448,31 @@ Hệ thống được cài đặt theo hướng đối tượng, trong đó các
 
 ---
 
+## Hướng dẫn chạy chương trình
+
+Dự án có hai chương trình kiểm thử độc lập bằng Java và C#. Mỗi chương trình có một file chạy chính; các file truy vấn được chương trình chính gọi đến và không chạy độc lập.
+
+| Ngôn ngữ | File chạy chính | Mã nguồn truy vấn |
+|---|---|---|
+| Java | [`Main.java`](./MaNguon_Nhom/Java/src/app/Main.java) | [`TruyVanCaNhan.java` (câu 1-10)](./SanPham_CaNhan/LeNguyenMinhThu/TruyVan/java/TruyVanCaNhan.java), [`TruyVanCaNhan.java` (câu 21-30)](./SanPham_CaNhan/PhamQuocDien/TruyVan/jv/TruyVanCaNhan.java) |
+| C# | [`Program.cs`](./MaNguon_Nhom/csharp/Program.cs) | [`TruyVanCaNhan.cs` (câu 1-10)](./SanPham_CaNhan/LeNguyenMinhThu/TruyVan/C%23/TruyVanCaNhan.cs), [`TruyVanCaNhan.cs` (câu 21-30)](./SanPham_CaNhan/PhamQuocDien/TruyVan/C%23/TruyVanCaNhan.cs) |
+
+Chạy các lệnh dưới đây bằng PowerShell từ thư mục gốc của repository.
+
+### Java
+
+Yêu cầu JDK 17 trở lên. Danh sách các file nguồn được khai báo trong `sources.txt`.
+
+```powershell
+Set-Location MaNguon_Nhom\Java
+javac -d out '@sources.txt'
+java -cp out app.Main
+```
+
+### C#
+
+Yêu cầu .NET 10 SDK:
+
+```powershell
+dotnet run --project MaNguon_Nhom\csharp\csharp.csproj
+```
