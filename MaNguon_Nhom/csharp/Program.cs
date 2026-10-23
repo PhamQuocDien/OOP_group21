@@ -196,6 +196,110 @@ foreach (var item in q10Thu)
 
 Console.WriteLine("\n========== KẾT THÚC KIỂM THỬ ==========");
 
+// ============================================================
+// 4. KIỂM THỬ 10 CÂU TRUY VẤN TỪ CÂU 11 ĐẾN CÂU 20
+// ============================================================
+Console.WriteLine("\n========== KIỂM THỬ 10 CÂU TRUY VẤN TỪ 11 ĐẾN 20 ==========");
+
+// Chuẩn bị dữ liệu mẫu cho các tham số đầu vào
+var nhomCVMau = duLieu.NhomCongViecs.First();
+var chucVuMau = duLieu.NhanViens.First().ChucVu;
+
+// Câu 11
+Console.WriteLine("\n[CÂU 11] Top 5 hợp đồng có tổng tiền cao nhất:");
+var q11 = LeNhatNinh.TruyVan.TruyVanCaNhan.LayTop5HopDongTongTienCaoNhat(duLieu);
+Console.WriteLine($"Số kết quả: {q11.Count}");
+foreach (var item in q11)
+{
+    Console.WriteLine($"Số HĐ: {item.SoHD} | Ngày lập: {item.Ngaylap:dd/MM/yyyy} | Tổng tiền: {item.Tongtien:N0} VNĐ");
+}
+
+// Câu 12
+Console.WriteLine("\n[CÂU 12] Thống kê số lượng hợp đồng theo từng trạng thái:");
+var q12 = LeNhatNinh.TruyVan.TruyVanCaNhan.DemHopDongTheoTrangThai(duLieu);
+Console.WriteLine($"Số kết quả: {q12.Count}");
+foreach (var item in q12)
+{
+    Console.WriteLine($"Trạng thái: {item.TrangThai} | Số lượng: {item.SoLuong}");
+}
+
+// Câu 13
+Console.WriteLine("\n[CÂU 13] Danh sách tất cả nhóm công việc:");
+var q13 = LeNhatNinh.TruyVan.TruyVanCaNhan.LayTatCaNhomCongViec(duLieu);
+Console.WriteLine($"Số kết quả: {q13.Count}");
+foreach (var item in q13)
+{
+    Console.WriteLine($"Mã nhóm CV: {item.MaNhomCV} | Tên nhóm: {item.TenNhom}");
+}
+
+// Câu 14
+Console.WriteLine($"\n[CÂU 14] Tìm nhóm công việc theo tên: '{nhomCVMau.TenNhom}'");
+var q14 = LeNhatNinh.TruyVan.TruyVanCaNhan.TimNhomCongViecTheoTen(duLieu, nhomCVMau.TenNhom);
+Console.WriteLine($"Số kết quả: {q14.Count}");
+foreach (var item in q14)
+{
+    Console.WriteLine($"Mã nhóm CV: {item.MaNhomCV} | Tên nhóm: {item.TenNhom}");
+}
+
+// Câu 15
+Console.WriteLine($"\n[CÂU 15] Liệt kê công việc thuộc mã nhóm CV: {nhomCVMau.MaNhomCV}");
+var q15 = LeNhatNinh.TruyVan.TruyVanCaNhan.LayCongViecTheoNhom(duLieu, nhomCVMau.MaNhomCV);
+Console.WriteLine($"Số kết quả: {q15.Count}");
+foreach (var item in q15)
+{
+    Console.WriteLine($"Mã CV: {item.MaCV} | Tên CV: {item.TenCV} | Đơn giá: {item.Dongia:N0} VNĐ");
+}
+
+// Câu 16
+Console.WriteLine("\n[CÂU 16] Lọc công việc có đơn giá từ 500.000 VNĐ trở lên:");
+var q16 = LeNhatNinh.TruyVan.TruyVanCaNhan.LayCongViecTheoDonGia(duLieu);
+Console.WriteLine($"Số kết quả: {q16.Count}");
+foreach (var item in q16)
+{
+    Console.WriteLine($"Mã CV: {item.MaCV} | Tên CV: {item.TenCV} | Đơn giá: {item.Dongia:N0} VNĐ");
+}
+
+// Câu 17
+Console.WriteLine("\n[CÂU 17] Thống kê số lần thực hiện của từng công việc:");
+var q17 = LeNhatNinh.TruyVan.TruyVanCaNhan.DemSoLanThucHienCuaTungCongViec(duLieu);
+Console.WriteLine($"Số kết quả: {q17.Count}");
+foreach (var item in q17)
+{
+    Console.WriteLine($"Mã CV: {item.CongViec.MaCV} | Tên CV: {item.CongViec.TenCV} | Số lần thực hiện: {item.SoLanThucHien}");
+}
+
+// Câu 18
+Console.WriteLine("\n[CÂU 18] Công việc mang lại tổng doanh thu cao nhất:");
+var q18 = LeNhatNinh.TruyVan.TruyVanCaNhan.TimCongViecCoDoanhThuCaoNhat(duLieu);
+if (q18 != null)
+{
+    Console.WriteLine($"Mã CV: {q18.MaCV} | Tên CV: {q18.TenCV} | Đơn giá: {q18.Dongia:N0} VNĐ");
+}
+else
+{
+    Console.WriteLine("Không tìm thấy công việc nào.");
+}
+
+// Câu 19
+Console.WriteLine($"\n[CÂU 19] Liệt kê nhân viên theo chức vụ: {chucVuMau}");
+var q19 = LeNhatNinh.TruyVan.TruyVanCaNhan.LayNhanVienTheoChucVu(duLieu, chucVuMau);
+Console.WriteLine($"Số kết quả: {q19.Count}");
+foreach (var item in q19)
+{
+    Console.WriteLine($"Mã NV: {item.MaNV} | Họ tên: {item.Hoten} | Chức vụ: {item.ChucVu}");
+}
+
+// Câu 20
+Console.WriteLine("\n[CÂU 20] Thống kê số hợp đồng do từng nhân viên lập:");
+var q20 = LeNhatNinh.TruyVan.TruyVanCaNhan.DemHopDongTheoNhanVien(duLieu);
+Console.WriteLine($"Số kết quả: {q20.Count}");
+foreach (var item in q20)
+{
+    Console.WriteLine($"Mã NV: {item.NhanVien.MaNV} | Họ tên: {item.NhanVien.Hoten} | Số hợp đồng: {item.SoHopDong}");
+}
+
+Console.WriteLine("\n========== KẾT THÚC KIỂM THỬ CÂU 11 - 20 ==========");
+
 Console.WriteLine("\n========== KIỂM THỬ 10 CÂU TRUY VẤN CÁ NHÂN ==========");
 
 // Câu 21
