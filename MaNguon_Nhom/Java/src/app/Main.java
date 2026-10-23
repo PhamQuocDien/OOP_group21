@@ -204,6 +204,220 @@ public class Main {
         System.out.println(
                 "\n========== KIEM THU 10 CAU TRUY VAN CA NHAN (JAVA STREAM) ==========");
 
+
+public final class TruyVan11Den20 {
+
+    private TruyVan11Den20() {
+    }
+
+    // Ket qua thong ke so hop dong theo trang thai
+    public record KetQuaDemHopDongTheoTrangThai(
+            Object trangThai, long soLuong) {
+    }
+
+    // Ket qua dem so lan cong viec xuat hien trong chi tiet hop dong
+    public record KetQuaDemCongViec(
+            CongViec congViec, long soLanXuatHien) {
+    }
+
+    // Ket qua doanh thu du kien cua cong viec
+    public record KetQuaDoanhThuDuKien(
+            CongViec congViec,
+            long soLanXuatHien,
+            double doanhThuDuKien) {
+    }
+
+    // Ket qua dem so hop dong cua tung nhan vien
+    public record KetQuaDemHopDongNhanVien(
+            NhanVien nhanVien, long soHopDong) {
+    }
+
+    private static void kiemTraChuoi(String giaTri, String tenThamSo) {
+        if (giaTri == null || giaTri.isBlank()) {
+            throw new IllegalArgumentException(
+                    tenThamSo + " khong duoc de trong.");
+        }
+    }
+
+    // Cau 11: Lay 5 hop dong co tong tien cao nhat
+    public static List<HopDong> layTop5HopDongTongTienCaoNhat(
+            DataSeeder.DuLieuMau data) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+
+        return data.getHopDongs().stream()
+                .sorted(
+                        Comparator.comparingDouble(HopDong::getTongtien)
+                                .reversed()
+                                .thenComparing(HopDong::getSoHD))
+                .limit(5)
+                .toList();
+    }
+
+    // Cau 12: Dem so hop dong theo tung trang thai
+    public static List<KetQuaDemHopDongTheoTrangThai>
+    demHopDongTheoTrangThai(DataSeeder.DuLieuMau data) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+
+        Map<Object, Long> thongKe = data.getHopDongs().stream()
+                .collect(Collectors.groupingBy(
+                        HopDong::getTinhtrangHD,
+                        Collectors.counting()));
+
+        return thongKe.entrySet().stream()
+                .map(item -> new KetQuaDemHopDongTheoTrangThai(
+                        item.getKey(), item.getValue()))
+                .sorted(Comparator.comparing(
+                        item -> item.trangThai().toString()))
+                .toList();
+    }
+
+    // Cau 13: Lay danh sach tat ca nhom cong viec
+    public static List<NhomCongViec> layTatCaNhomCongViec(
+            DataSeeder.DuLieuMau data) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+
+        return data.getNhomCongViecs().stream()
+                .sorted(Comparator.comparing(NhomCongViec::getMaNhomCV))
+                .toList();
+    }
+
+    // Cau 14: Tim nhom cong viec theo ten nhom
+    public static Optional<NhomCongViec> timNhomCongViecTheoTen(
+            DataSeeder.DuLieuMau data, String tenNhom) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+        kiemTraChuoi(tenNhom, "Ten nhom");
+
+        return data.getNhomCongViecs().stream()
+                .filter(nhom -> nhom.getTenNhom().equalsIgnoreCase(
+                        tenNhom.trim()))
+                .sorted(Comparator.comparing(NhomCongViec::getMaNhomCV))
+                .findFirst();
+    }
+
+    // Cau 15: Lay cac cong viec theo ma nhom cong viec
+    public static List<CongViec> layCongViecTheoMaNhom(
+            DataSeeder.DuLieuMau data, String maNhomCV) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+        kiemTraChuoi(maNhomCV, "Ma nhom cong viec");
+
+        return data.getCongViecs().stream()
+                .filter(cv -> cv.getMaNhomCV().equalsIgnoreCase(
+                        maNhomCV.trim()))
+                .sorted(Comparator.comparing(CongViec::getMaCV))
+                .toList();
+    }
+
+    // Cau 16: Lay cong viec co don gia tu 500.000 dong tro len
+    public static List<CongViec> layCongViecDonGiaTu500000(
+            DataSeeder.DuLieuMau data) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+
+        return data.getCongViecs().stream()
+                .filter(cv -> cv.getDongia() >= 500000)
+                .sorted(
+                        Comparator.comparingDouble(CongViec::getDongia)
+                                .reversed()
+                                .thenComparing(CongViec::getMaCV))
+                .toList();
+    }
+
+    // Cau 17: Dem so lan moi cong viec xuat hien trong chi tiet hop dong
+    // Van hien thi cong viec chua xuat hien, voi so lan bang 0
+    public static List<KetQuaDemCongViec> demSoLanCongViecXuatHien(
+            DataSeeder.DuLieuMau data) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+
+        Map<String, Long> soLanTheoMaCV =
+                data.getChiTietHopDongs().stream()
+                        .collect(Collectors.groupingBy(
+                                ChiTietHopDong::getMaCV,
+                                Collectors.counting()));
+
+        return data.getCongViecs().stream()
+                .map(cv -> new KetQuaDemCongViec(
+                        cv,
+                        soLanTheoMaCV.getOrDefault(cv.getMaCV(), 0L)))
+                .sorted(Comparator.comparing(
+                        item -> item.congViec().getMaCV()))
+                .toList();
+    }
+
+    // Cau 18: Tim cong viec co doanh thu du kien cao nhat
+    // Doanh thu du kien = Don gia * So lan xuat hien
+    public static Optional<KetQuaDoanhThuDuKien>
+    timCongViecCoDoanhThuDuKienCaoNhat(DataSeeder.DuLieuMau data) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+
+        Map<String, Long> soLanTheoMaCV =
+                data.getChiTietHopDongs().stream()
+                        .collect(Collectors.groupingBy(
+                                ChiTietHopDong::getMaCV,
+                                Collectors.counting()));
+
+        return data.getCongViecs().stream()
+                .map(cv -> {
+                    long soLan = soLanTheoMaCV.getOrDefault(
+                            cv.getMaCV(), 0L);
+
+                    double doanhThu = cv.getDongia() * soLan;
+
+                    return new KetQuaDoanhThuDuKien(
+                            cv, soLan, doanhThu);
+                })
+                .sorted(
+                        Comparator.comparingDouble(
+                                        KetQuaDoanhThuDuKien::doanhThuDuKien)
+                                .reversed()
+                                .thenComparing(
+                                        item -> item.congViec().getMaCV()))
+                .findFirst();
+    }
+
+    // Cau 19: Lay danh sach nhan vien theo chuc vu
+    public static List<NhanVien> layNhanVienTheoChucVu(
+            DataSeeder.DuLieuMau data, ChucVu chucVu) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+        Objects.requireNonNull(chucVu, "Chuc vu khong duoc null.");
+
+        return data.getNhanViens().stream()
+                .filter(nv -> nv.getChucVu() == chucVu)
+                .sorted(Comparator.comparing(NhanVien::getMaNV))
+                .toList();
+    }
+
+    // Cau 20: Dem so hop dong do tung nhan vien lap
+    // Van hien thi nhan vien chua lap hop dong, voi so luong bang 0
+    public static List<KetQuaDemHopDongNhanVien>
+    demHopDongTheoNhanVien(DataSeeder.DuLieuMau data) {
+
+        Objects.requireNonNull(data, "Du lieu khong duoc null.");
+
+        Map<String, Long> soHopDongTheoMaNV =
+                data.getHopDongs().stream()
+                        .collect(Collectors.groupingBy(
+                                HopDong::getMaNV,
+                                Collectors.counting()));
+
+        return data.getNhanViens().stream()
+                .map(nv -> new KetQuaDemHopDongNhanVien(
+                        nv,
+                        soHopDongTheoMaNV.getOrDefault(
+                                nv.getMaNV(), 0L)))
+                .sorted(Comparator.comparing(
+                        item -> item.nhanVien().getMaNV()))
+                .toList();
+    }
+}
+
         // Cau 21
         System.out.println(
                 "\n[CAU 21] Tim nhan vien lap nhieu hop dong nhat trong thang 7/2026.");
