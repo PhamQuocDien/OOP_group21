@@ -302,6 +302,7 @@ Console.WriteLine("\n========== KẾT THÚC KIỂM THỬ CÂU 11 - 20 ==========
 
 Console.WriteLine("\n========== KIỂM THỬ 10 CÂU TRUY VẤN CÁ NHÂN ==========");
 
+
 // Câu 21
 Console.WriteLine(
     "\n[CÂU 21] Tìm nhân viên lập nhiều hợp đồng nhất trong tháng 7/2026.");
