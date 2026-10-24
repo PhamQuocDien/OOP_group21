@@ -6,11 +6,13 @@ import model.entity.NhomCongViec;
 import model.entity.HopDong;
 import model.entity.ChiTietHopDong;
 import model.entity.NhanVien;
+import model.enums.ChucVu;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TruyVanCaNhan {
@@ -18,180 +20,115 @@ public class TruyVanCaNhan {
     private TruyVanCaNhan() {
     }
 
-    // Câu 11: Lấy danh sách tất cả công việc.
-    public static List<CongViec> layTatCaCongViec(
-            DataSeeder.DuLieuMau data) {
+    // Record kết quả cho các câu truy vấn thống kê/gom nhóm
+    public record KetQuaDemTrangThai(String trangThai, long soLuong) {}
+    public record KetQuaSoLanXuatHien(CongViec congViec, long soLanXuatHien) {}
+    public record KetQuaDoanhThuCongViec(CongViec congViec, long soLanXuatHien, double doanhThuDuKien) {}
+    public record KetQuaDemHopDongNhanVien(NhanVien nhanVien, long soHopDong) {}
 
+    // Câu 11: Lấy 5 hợp đồng có tổng tiền cao nhất
+    public static List<HopDong> LayTop5HopDongTongTienCaoNhat(DataSeeder.DuLieuMau data) {
         Objects.requireNonNull(data);
-
-        return data.getCongViecs().stream()
-                .sorted(Comparator.comparing(CongViec::getMaCV))
-                .toList();
-    }
-
-    // Câu 12: Tìm công việc theo mã nhóm công việc.
-    public static List<CongViec> layCongViecTheoNhom(
-            DataSeeder.DuLieuMau data, String maNhomCV) {
-
-        Objects.requireNonNull(data);
-
-        if (maNhomCV == null || maNhomCV.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Mã nhóm công việc không được để trống.");
-        }
-
-        return data.getCongViecs().stream()
-                .filter(cv -> Objects.equals(
-                        cv.getMaNhomCV(), maNhomCV))
-                .sorted(Comparator.comparing(CongViec::getMaCV))
-                .toList();
-    }
-
-    // Câu 13: Tìm công việc có đơn giá lớn hơn mức giá cho trước.
-    public static List<CongViec> layCongViecTheoDonGia(
-            DataSeeder.DuLieuMau data, double donGiaToiThieu) {
-
-        Objects.requireNonNull(data);
-
-        return data.getCongViecs().stream()
-                .filter(cv -> cv.getDongia() > donGiaToiThieu)
-                .sorted(Comparator.comparingDouble(CongViec::getDongia)
-                        .reversed()
-                        .thenComparing(CongViec::getMaCV))
-                .toList();
-    }
-
-    // Câu 14: Tìm công việc có đơn giá cao nhất.
-    public static List<CongViec> timCongViecDonGiaCaoNhat(
-            DataSeeder.DuLieuMau data) {
-
-        Objects.requireNonNull(data);
-
-        double max = data.getCongViecs().stream()
-                .mapToDouble(CongViec::getDongia)
-                .max()
-                .orElse(0);
-
-        return data.getCongViecs().stream()
-                .filter(cv -> cv.getDongia() == max)
-                .sorted(Comparator.comparing(CongViec::getMaCV))
-                .toList();
-    }
-
-    // Câu 15: Đếm số công việc thuộc từng nhóm công việc.
-    public static Map<String, Long> demCongViecTheoNhom(
-            DataSeeder.DuLieuMau data) {
-
-        Objects.requireNonNull(data);
-
-        return data.getCongViecs().stream()
-                .collect(Collectors.groupingBy(
-                        CongViec::getMaNhomCV,
-                        Collectors.counting()));
-    }
-
-    // Câu 16: Tìm các nhóm công việc có trong hệ thống.
-    public static List<NhomCongViec> layTatCaNhomCongViec(
-            DataSeeder.DuLieuMau data) {
-
-        Objects.requireNonNull(data);
-
-        return data.getNhomCongViecs().stream()
-                .sorted(Comparator.comparing(
-                        NhomCongViec::getMaNhomCV))
-                .toList();
-    }
-
-    // Câu 17: Tìm nhân viên có chức vụ tư vấn.
-    public static List<NhanVien> layNhanVienTuVan(
-            DataSeeder.DuLieuMau data) {
-
-        Objects.requireNonNull(data);
-
-        return data.getNhanViens().stream()
-                .filter(nv -> nv.getChucVu()
-                        == model.enums.ChucVu.TU_VAN)
-                .sorted(Comparator.comparing(NhanVien::getMaNV))
-                .toList();
-    }
-
-    // Câu 18: Tìm công việc có tổng giá trị cao nhất
-    // dựa trên đơn giá của công việc trong các hợp đồng.
-    public record KetQuaDoanhThuCongViec(
-            CongViec congViec, double tongGiaTri) {
-    }
-
-    public static List<KetQuaDoanhThuCongViec>
-            timCongViecCoTongGiaTriCaoNhat(
-                    DataSeeder.DuLieuMau data) {
-
-        Objects.requireNonNull(data);
-
-        Map<String, Double> tongGiaTriTheoCongViec =
-                data.getChiTietHopDongs().stream()
-                        .collect(Collectors.groupingBy(
-                                ChiTietHopDong::getMaCV,
-                                Collectors.summingDouble(ct ->
-                                        data.getCongViecs().stream()
-                                                .filter(cv -> Objects.equals(
-                                                        cv.getMaCV(),
-                                                        ct.getMaCV()))
-                                                .mapToDouble(
-                                                        CongViec::getDongia)
-                                                .findFirst()
-                                                .orElse(0))));
-
-        double max = tongGiaTriTheoCongViec.values().stream()
-                .mapToDouble(Double::doubleValue)
-                .max()
-                .orElse(0);
-
-        return tongGiaTriTheoCongViec.entrySet().stream()
-                .filter(entry -> Double.compare(
-                        entry.getValue(), max) == 0)
-                .flatMap(entry -> data.getCongViecs().stream()
-                        .filter(cv -> Objects.equals(
-                                cv.getMaCV(), entry.getKey()))
-                        .map(cv -> new KetQuaDoanhThuCongViec(
-                                cv, entry.getValue())))
-                .sorted(Comparator.comparing(
-                        kq -> kq.congViec().getMaCV()))
-                .toList();
-    }
-
-    // Câu 19: Tìm các hợp đồng có tổng tiền lớn hơn mức cho trước.
-    public static List<HopDong> layHopDongTheoTongTien(
-            DataSeeder.DuLieuMau data, double tongTienToiThieu) {
-
-        Objects.requireNonNull(data);
-
         return data.getHopDongs().stream()
-                .filter(hd -> hd.getTongtien() > tongTienToiThieu)
-                .sorted(Comparator.comparingDouble(HopDong::getTongtien)
-                        .reversed()
-                        .thenComparing(HopDong::getSoHD))
+                .sorted(Comparator.comparingDouble(HopDong::getTongtien).reversed())
+                .limit(5)
                 .toList();
     }
 
-    // Câu 20: Đếm số hợp đồng do từng nhân viên lập.
-    public record KetQuaDemHopDong(
-            NhanVien nhanVien, long soHopDong) {
+    // Câu 12: Đếm số hợp đồng theo từng trạng thái
+    public static List<KetQuaDemTrangThai> demHopDongTheoTrangThai(DataSeeder.DuLieuMau data) {
+        Objects.requireNonNull(data);
+        
+        Map<String, Long> map = data.getHopDongs().stream()
+                .collect(Collectors.groupingBy(hd -> hd.getTinhtrangHD().toString(), Collectors.counting()));
+        
+        return map.entrySet().stream()
+                .map(entry -> new KetQuaDemTrangThai(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
-    public static List<KetQuaDemHopDong> demHopDongTheoNhanVien(
-            DataSeeder.DuLieuMau data) {
-
+    // Câu 13: Lấy danh sách tất cả nhóm công việc
+    public static List<NhomCongViec> layTatCaNhomCongViec(DataSeeder.DuLieuMau data) {
         Objects.requireNonNull(data);
+        return data.getNhomCongViecs().stream()
+                .sorted(Comparator.comparing(NhomCongViec::getMaNhomCV))
+                .toList();
+    }
 
+    // Câu 14: Tìm nhóm công việc theo tên
+    public static Optional<NhomCongViec> timNhomCongViecTheoTen(DataSeeder.DuLieuMau data, String tenNhom) {
+        Objects.requireNonNull(data);
+        if (tenNhom == null) return Optional.empty();
+        return data.getNhomCongViecs().stream()
+                .filter(nhom -> nhom.getTenNhom().equalsIgnoreCase(tenNhom))
+                .findFirst();
+    }
+
+    // Câu 15: Lấy công việc theo mã nhóm
+    public static List<CongViec> layCongViecTheoMaNhom(DataSeeder.DuLieuMau data, String maNhomCV) {
+        Objects.requireNonNull(data);
+        return data.getCongViecs().stream()
+                .filter(cv -> Objects.equals(cv.getMaNhomCV(), maNhomCV))
+                .toList();
+    }
+
+    // Câu 16: Lấy công việc có đơn giá từ 500.000 đồng trở lên
+    public static List<CongViec> layCongViecDonGiaTu500000(DataSeeder.DuLieuMau data) {
+        Objects.requireNonNull(data);
+        return data.getCongViecs().stream()
+                .filter(cv -> cv.getDongia() >= 500000.0)
+                .toList();
+    }
+
+    // Câu 17: Đếm số lần mỗi công việc xuất hiện trong chi tiết hợp đồng
+    public static List<KetQuaSoLanXuatHien> demSoLanCongViecXuatHien(DataSeeder.DuLieuMau data) {
+        Objects.requireNonNull(data);
+        Map<String, Long> countMap = data.getChiTietHopDongs().stream()
+                .collect(Collectors.groupingBy(ChiTietHopDong::getMaCV, Collectors.counting()));
+
+        return countMap.entrySet().stream()
+                .map(entry -> {
+                    CongViec cv = data.getCongViecs().stream()
+                            .filter(c -> c.getMaCV().equals(entry.getKey()))
+                            .findFirst()
+                            .orElse(null);
+                    return new KetQuaSoLanXuatHien(cv, entry.getValue());
+                })
+                .filter(item -> item.congViec() != null)
+                .toList();
+    }
+
+    // Câu 18: Tìm công việc có doanh thu dự kiến cao nhất
+    public static Optional<KetQuaDoanhThuCongViec> timCongViecCoDoanhThuDuKienCaoNhat(DataSeeder.DuLieuMau data) {
+        Objects.requireNonNull(data);
+        List<KetQuaSoLanXuatHien> dsXuatHien = demSoLanCongViecXuatHien(data);
+
+        return dsXuatHien.stream()
+                .map(item -> {
+                    double doanhThu = item.soLanXuatHien() * item.congViec().getDongia();
+                    return new KetQuaDoanhThuCongViec(item.congViec(), item.soLanXuatHien(), doanhThu);
+                })
+                .max(Comparator.comparingDouble(KetQuaDoanhThuCongViec::doanhThuDuKien));
+    }
+
+    // Câu 19: Lấy danh sách nhân viên theo chức vụ
+    public static List<NhanVien> layNhanVienTheoChucVu(DataSeeder.DuLieuMau data, ChucVu chucVu) {
+        Objects.requireNonNull(data);
         return data.getNhanViens().stream()
-                .map(nv -> new KetQuaDemHopDong(
-                        nv,
-                        data.getHopDongs().stream()
-                                .filter(hd -> Objects.equals(
-                                        hd.getMaNV(), nv.getMaNV()))
-                                .count()))
-                .sorted(Comparator.comparing(
-                        kq -> kq.nhanVien().getMaNV()))
+                .filter(nv -> nv.getChucVu() == chucVu)
+                .toList();
+    }
+
+    // Câu 20: Đếm số hợp đồng do từng nhân viên lập
+    public static List<KetQuaDemHopDongNhanVien> demHopDongTheoNhanVien(DataSeeder.DuLieuMau data) {
+        Objects.requireNonNull(data);
+        return data.getNhanViens().stream()
+                .map(nv -> {
+                    long count = data.getHopDongs().stream()
+                            .filter(hd -> Objects.equals(hd.getMaNV(), nv.getMaNV()))
+                            .count();
+                    return new KetQuaDemHopDongNhanVien(nv, count);
+                })
                 .toList();
     }
 }
