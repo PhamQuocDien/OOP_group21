@@ -10,6 +10,7 @@ import model.entity.Tho;
 import java.time.LocalDate;
 import jv.TruyVanCaNhan;
 import java.time.format.DateTimeFormatter;
+import model.enums.ChucVu;
 
 public class Main {
     private static final DateTimeFormatter DINH_DANG_NGAY =
@@ -205,99 +206,143 @@ public class Main {
                 "\n========== KIEM THU 10 CAU TRUY VAN CA NHAN (JAVA STREAM) ==========");
 
         
+        
+        // ==========================================
+        // KIEM THU CAC CAU TRUY VAN 11–20
+        // ==========================================
+
         System.out.println(
                 "\n========== KIEM THU CAC CAU TRUY VAN 11–20 ==========");
 
         // Cau 11
-        System.out.println("\n[CAU 11] Top 5 hop dong co tong tien cao nhat.");
-        var q11 = TruyVan11Den20.layTop5HopDongTongTienCaoNhat(duLieuMau);
+        System.out.println(
+                "\n[CAU 11] Lay 5 hop dong co tong tien cao nhat.");
+
+        var q11 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan
+                .LayTop5HopDongTongTienCaoNhat(duLieuMau);
+
+        System.out.println("So ket qua: " + q11.size());
 
         for (var hd : q11) {
             System.out.printf(
-                    "So hop dong: %s | Tong tien: %,.0f dong%n",
-                    hd.getSoHD(), hd.getTongtien());
+                    "So hop dong: %s | Ngay lap: %s"
+                            + " | Tong tien: %,.0f dong"
+                            + " | Trang thai: %s | Ma khach hang: %s%n",
+                    hd.getSoHD(),
+                    hd.getNgaylap().format(DINH_DANG_NGAY),
+                    hd.getTongtien(),
+                    hd.getTinhtrangHD(),
+                    hd.getMaKH());
         }
 
         // Cau 12
-        System.out.println("\n[CAU 12] Dem hop dong theo trang thai.");
-        var q12 = TruyVan11Den20.demHopDongTheoTrangThai(duLieuMau);
+        System.out.println(
+                "\n[CAU 12] Dem so hop dong theo tung trang thai.");
+
+        var q12 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.demHopDongTheoTrangThai(duLieuMau);
+
+        System.out.println("So trang thai: " + q12.size());
 
         for (var item : q12) {
             System.out.printf(
-                    "Trang thai: %s | So luong: %d%n",
-                    item.trangThai(), item.soLuong());
+                    "Trang thai: %s | So hop dong: %d%n",
+                    item.trangThai(),
+                    item.soLuong());
         }
 
         // Cau 13
-        System.out.println("\n[CAU 13] Danh sach tat ca nhom cong viec.");
-        var q13 = TruyVan11Den20.layTatCaNhomCongViec(duLieuMau);
+        System.out.println(
+                "\n[CAU 13] Lay danh sach tat ca nhom cong viec.");
+
+        var q13 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.layTatCaNhomCongViec(duLieuMau);
+
+        System.out.println("So ket qua: " + q13.size());
 
         for (var item : q13) {
             System.out.printf(
                     "Ma nhom: %s | Ten nhom: %s | Noi dung: %s%n",
-                    item.getMaNhomCV(), item.getTenNhom(), item.getNoidung());
+                    item.getMaNhomCV(),
+                    item.getTenNhom(),
+                    item.getNoidung());
         }
 
         // Cau 14
-        String tenNhomTest = duLieuMau.getNhomCongViecs()
+        String tenNhomTest14 = duLieuMau.getNhomCongViecs()
                 .get(0).getTenNhom();
 
         System.out.printf(
                 "\n[CAU 14] Tim nhom cong viec theo ten '%s'.%n",
-                tenNhomTest);
+                tenNhomTest14);
 
-        var q14 = TruyVan11Den20.timNhomCongViecTheoTen(
-                duLieuMau, tenNhomTest);
+        var q14 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.timNhomCongViecTheoTen(
+                duLieuMau, tenNhomTest14);
 
         if (q14.isPresent()) {
-            var nhom = q14.get();
+            var nhom14 = q14.get();
+
             System.out.printf(
                     "Ma nhom: %s | Ten nhom: %s | Noi dung: %s%n",
-                    nhom.getMaNhomCV(),
+                    nhom14.getMaNhomCV(),
                     nhom.getTenNhom(),
-                    nhom.getNoidung());
+                    nhom14.getNoidung());
         } else {
             System.out.println("Khong tim thay nhom cong viec.");
         }
 
         // Cau 15
-        String maNhomCVTest = duLieuMau.getNhomCongViecs()
+        String maNhomTest15 = duLieuMau.getNhomCongViecs()
                 .get(0).getMaNhomCV();
 
         System.out.printf(
-                "\n[CAU 15] Cong viec thuoc nhom %s.%n", maNhomCVTest);
+                "\n[CAU 15] Lay cong viec theo ma nhom %s.%n",
+                maNhomTest15);
 
-        var q15 = TruyVan11Den20.layCongViecTheoMaNhom(
-                duLieuMau, maNhomCVTest);
+        var q15 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.layCongViecTheoMaNhom(
+                duLieuMau, maNhomTest15);
+
+        System.out.println("So ket qua: " + q15.size());
 
         for (var cv : q15) {
             System.out.printf(
-                    "Ma CV: %s | Ten CV: %s | Don gia: %,.0f dong | Ma nhom: %s%n",
-                    cv.getMaCV(), cv.getTenCV(),
-                    cv.getDongia(), cv.getMaNhomCV());
+                    "Ma cong viec: %s | Ten cong viec: %s"
+                            + " | Don gia: %,.0f dong | Ma nhom: %s%n",
+                    cv.getMaCV(),
+                    cv.getTenCV(),
+                    cv.getDongia(),
+                    cv.getMaNhomCV());
         }
 
         // Cau 16
         System.out.println(
-                "\n[CAU 16] Cong viec co don gia tu 500.000 dong tro len.");
+                "\n[CAU 16] Lay cong viec co don gia tu 500.000 dong tro len.");
 
-        var q16 = TruyVan11Den20.layCongViecDonGiaTu500000(duLieuMau);
+        var q16 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.layCongViecDonGiaTu500000(duLieuMau);
+
+        System.out.println("So ket qua: " + q16.size());
 
         for (var cv : q16) {
             System.out.printf(
-                    "Ma CV: %s | Ten CV: %s | Don gia: %,.0f dong%n",
-                    cv.getMaCV(), cv.getTenCV(), cv.getDongia());
+                    "Ma cong viec: %s | Ten cong viec: %s"
+                            + " | Don gia: %,.0f dong | Ma nhom: %s%n",
+                    cv.getMaCV(),
+                    cv.getTenCV(),
+                    cv.getDongia(),
+                    cv.getMaNhomCV());
         }
 
         // Cau 17
         System.out.println(
-                "\n[CAU 17] Dem so lan moi cong viec xuat hien trong chi tiet hop dong.");
+                "\n[CAU 17] Dem so lan moi cong viec xuat hien"
+                        + " trong chi tiet hop dong.");
 
-        var q17 = TruyVan11Den20.demSoLanCongViecXuatHien(duLieuMau);
+        var q17 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.demSoLanCongViecXuatHien(duLieuMau);
+
+        System.out.println("So ket qua: " + q17.size());
 
         for (var item : q17) {
             System.out.printf(
-                    "Ma CV: %s | Ten CV: %s | So lan xuat hien: %d%n",
+                    "Ma cong viec: %s | Ten cong viec: %s"
+                            + " | So lan xuat hien: %d%n",
                     item.congViec().getMaCV(),
                     item.congViec().getTenCV(),
                     item.soLanXuatHien());
@@ -305,15 +350,16 @@ public class Main {
 
         // Cau 18
         System.out.println(
-                "\n[CAU 18] Cong viec co doanh thu du kien cao nhat.");
+                "\n[CAU 18] Tim cong viec co doanh thu du kien cao nhat.");
 
-        var q18 = TruyVan11Den20
-                .timCongViecCoDoanhThuDuKienCaoNhat(duLieuMau);
+        var q18 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.timCongViecCoDoanhThuDuKienCaoNhat(duLieuMau);
 
         if (q18.isPresent()) {
             var item = q18.get();
+
             System.out.printf(
-                    "Ma CV: %s | Ten CV: %s | Don gia: %,.0f dong"
+                    "Ma cong viec: %s | Ten cong viec: %s"
+                            + " | Don gia: %,.0f dong"
                             + " | So lan xuat hien: %d"
                             + " | Doanh thu du kien: %,.0f dong%n",
                     item.congViec().getMaCV(),
@@ -326,34 +372,45 @@ public class Main {
         }
 
         // Cau 19
-        System.out.println("\n[CAU 19] Danh sach nhan vien theo chuc vu.");
+        System.out.println(
+                "\n[CAU 19] Lay danh sach nhan vien theo chuc vu.");
 
         for (ChucVu chucVu : ChucVu.values()) {
-            var q19 = TruyVan11Den20.layNhanVienTheoChucVu(
+            var q19 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.layNhanVienTheoChucVu(
                     duLieuMau, chucVu);
 
             System.out.println("\nChuc vu: " + chucVu);
+            System.out.println("So ket qua: " + q19.size());
 
             for (var nv : q19) {
                 System.out.printf(
-                        "Ma NV: %s | Ho ten: %s | Chuc vu: %s%n",
-                        nv.getMaNV(), nv.getHoten(), nv.getChucVu());
+                        "Ma nhan vien: %s | Ho ten: %s"
+                                + " | Chuc vu: %s%n",
+                        nv.getMaNV(),
+                        nv.getHoten(),
+                        nv.getChucVu());
             }
         }
 
         // Cau 20
         System.out.println(
-                "\n[CAU 20] Dem so hop dong cua tung nhan vien.");
+                "\n[CAU 20] Dem so hop dong do tung nhan vien lap.");
 
-        var q20 = TruyVan11Den20.demHopDongTheoNhanVien(duLieuMau);
+        var q20 = SanPham_CaNhan.LeNhatNinh.TruyVan.java.TruyVanCaNhan.demHopDongTheoNhanVien(duLieuMau);
+
+        System.out.println("So ket qua: " + q20.size());
 
         for (var item : q20) {
             System.out.printf(
-                    "Ma NV: %s | Ho ten: %s | So hop dong: %d%n",
+                    "Ma nhan vien: %s | Ho ten: %s"
+                            + " | So hop dong: %d%n",
                     item.nhanVien().getMaNV(),
                     item.nhanVien().getHoten(),
                     item.soHopDong());
         }
+
+        System.out.println(
+                "\n========== KET THUC KIEM THU CAU 11–20 ==========");
 
 
         // Cau 21
