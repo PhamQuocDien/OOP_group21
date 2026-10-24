@@ -1,4 +1,4 @@
-package java;
+package SanPham_CaNhan.LeNhatNinh.TruyVan.java;
 
 import data.DataSeeder;
 import model.entity.CongViec;
